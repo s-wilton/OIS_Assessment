@@ -1,0 +1,428 @@
+<table>
+  <style>
+    table,
+    td,
+    th {
+      border: 1px solid black;
+    }
+    table {
+      border-collapse: collapse;
+    }
+    td,
+    th {
+      text-align: left;
+      padding: 0.2rem 0.5rem;
+    }
+    [class*="hint--"] {
+      display: table-cell !important;
+    }
+  </style>
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/hint.css/3.0.0/hint.min.css"
+  />
+  <caption>
+    Ticket Summary By-Team
+  </caption>
+  <thead>
+    <tr>
+      <th scope="col">Team</th>
+      <th scope="col">Category</th>
+      <th scope="col">Total Tickets</th>
+      <th scope="col">Total Time</th>
+      <th scope="col">Average Time per Ticket</th>
+      <th scope="col">Average Cust. Rating</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Account Provisioning</td>
+      <td>Hardware Issue</td>
+      <td class="hint--right hint--no-animate" data-hint="L-20 M-12 H-8">
+        40 (~36.7%)
+      </td>
+      <td
+        class="hint--right hint--no-animate"
+        data-hint="L-39.5hrs M-26.6hrs H-15.3hrs"
+      >
+        81.4 hrs (~35.1%)
+      </td>
+      <td
+        class="hint--right hint--no-animate"
+        data-hint="L-2.0hrs M-2.2hrs H-1.9hrs"
+      >
+        2.0 hrs average
+      </td>
+      <td class="hint--right hint--no-animate" data-hint="L-2.8 M-3.8 H-3.0">
+        3.1 average
+      </td>
+    </tr>
+    <tr>
+      <td></td>
+      <td>Network Issue</td>
+      <td class="hint--right hint--no-animate" data-hint="L-15 M-9 H-13">
+        37 (~33.9%)
+      </td>
+      <td
+        class="hint--right hint--no-animate"
+        data-hint="L-30.2hrs M-19.3hrs H-31.6hrs"
+      >
+        81.1 hrs (~35.0%)
+      </td>
+      <td
+        class="hint--right hint--no-animate"
+        data-hint="L-2.0hrs M-2.1hrs H-2.4hrs"
+      >
+        2.2 hrs average
+      </td>
+      <td class="hint--right hint--no-animate" data-hint="L-3.0 M-3.6 H-3.5">
+        3.3 average
+      </td>
+    </tr>
+    <tr>
+      <td></td>
+      <td>Software Issue</td>
+      <td class="hint--right hint--no-animate" data-hint="L-11 M-10 H-11">
+        32 (~29.4%)
+      </td>
+      <td
+        class="hint--right hint--no-animate"
+        data-hint="L-25.2hrs M-19.5hrs H-24.5hrs"
+      >
+        69.2 hrs (~29.9%)
+      </td>
+      <td
+        class="hint--right hint--no-animate"
+        data-hint="L-2.3hrs M-1.9hrs H-2.2hrs"
+      >
+        2.2 hrs average
+      </td>
+      <td class="hint--right hint--no-animate" data-hint="L-2.6 M-2.6 H-3.3">
+        2.8 average
+      </td>
+    </tr>
+    <tr style="font-weight: bold">
+      <td></td>
+      <td style="text-align: right">Totals:</td>
+      <td>109</td>
+      <td>231.7 hrs</td>
+      <td>2.1 hrs average</td>
+      <td>3.1 average</td>
+    </tr>
+    <tr>
+      <td style="border: none"></td>
+    </tr>
+    <tr style="background-color: #f0ffff">
+      <td>Infrastructure</td>
+      <td>Hardware Issue</td>
+      <td class="hint--right hint--no-animate" data-hint="L-8 M-7 H-10">
+        25 (~25.5%)
+      </td>
+      <td
+        class="hint--right hint--no-animate"
+        data-hint="L-14.2hrs M-12.0hrs H-14.3hrs"
+      >
+        40.5 hrs (~22.8%)
+      </td>
+      <td
+        class="hint--right hint--no-animate"
+        data-hint="L-1.8hrs M-1.7hrs H-1.4hrs"
+      >
+        1.6 hrs average
+      </td>
+      <td class="hint--right hint--no-animate" data-hint="L-3.3 M-3.3 H-3.7">
+        3.4 average
+      </td>
+    </tr>
+    <tr style="background-color: #f0ffff">
+      <td></td>
+      <td>Network Issue</td>
+      <td class="hint--right hint--no-animate" data-hint="L-11 M-10 H-18">
+        39 (~39.8%)
+      </td>
+      <td
+        class="hint--right hint--no-animate"
+        data-hint="L-17.6hrs M-15.6hrs H-39.4hrs"
+      >
+        72.6 hrs (~40.8%)
+      </td>
+      <td
+        class="hint--right hint--no-animate"
+        data-hint="L-1.6hrs M-1.6hrs H-2.2hrs"
+      >
+        1.9 hrs average
+      </td>
+      <td class="hint--right hint--no-animate" data-hint="L-2.5 M-3.5 H-3.4">
+        3.2 average
+      </td>
+    </tr>
+    <tr style="background-color: #f0ffff">
+      <td></td>
+      <td>Software Issue</td>
+      <td class="hint--right hint--no-animate" data-hint="L-18 M-9 H-7">
+        34 (~34.7%)
+      </td>
+      <td
+        class="hint--right hint--no-animate"
+        data-hint="L-35.1hrs M-19.6hrs H-10.0hrs"
+      >
+        64.6 hrs (~36.4%)
+      </td>
+      <td
+        class="hint--right hint--no-animate"
+        data-hint="L-1.9hrs M-2.2hrs H-1.4hrs"
+      >
+        1.9 hrs average
+      </td>
+      <td class="hint--right hint--no-animate" data-hint="L-3.6 M-3.1 H-3.7">
+        3.5 average
+      </td>
+    </tr>
+    <tr style="font-weight: bold; background-color: #f0ffff">
+      <td></td>
+      <td style="text-align: right">Totals:</td>
+      <td>98</td>
+      <td>177.7 hrs</td>
+      <td>1.8 hrs average</td>
+      <td>3.4 average</td>
+    </tr>
+    <tr>
+      <td style="border: none"></td>
+    </tr>
+    <tr>
+      <td>Security</td>
+      <td>Hardware Issue</td>
+      <td class="hint--right hint--no-animate" data-hint="L-11 M-14 H-14">
+        39 (~36.8%)
+      </td>
+      <td
+        class="hint--right hint--no-animate"
+        data-hint="L-15.6hrs M-21.7hrs H-35.3hrs"
+      >
+        72.6 hrs (~37.9%)
+      </td>
+      <td
+        class="hint--right hint--no-animate"
+        data-hint="L-1.4hrs M-1.5hrs H-2.5hrs"
+      >
+        1.9 hrs average
+      </td>
+      <td class="hint--right hint--no-animate" data-hint="L-2.7 M-3.1 H-3.5">
+        3.1 average
+      </td>
+    </tr>
+    <tr>
+      <td></td>
+      <td>Network Issue</td>
+      <td class="hint--right hint--no-animate" data-hint="L-7 M-12 H-14">
+        33 (~31.1%)
+      </td>
+      <td
+        class="hint--right hint--no-animate"
+        data-hint="L-14.1hrs M-19.4hrs H-24.9hrs"
+      >
+        58.3 hrs (~30.5%)
+      </td>
+      <td
+        class="hint--right hint--no-animate"
+        data-hint="L-2.0hrs M-1.6hrs H-1.8hrs"
+      >
+        1.8 hrs average
+      </td>
+      <td class="hint--right hint--no-animate" data-hint="L-3.0 M-3.3 H-2.9">
+        3.1 average
+      </td>
+    </tr>
+    <tr>
+      <td></td>
+      <td>Software Issue</td>
+      <td class="hint--right hint--no-animate" data-hint="L-10 M-13 H-11">
+        34 (~32.1%)
+      </td>
+      <td
+        class="hint--right hint--no-animate"
+        data-hint="L-19.4hrs M-20.3hrs H-21.0hrs"
+      >
+        60.7 hrs (~31.7%)
+      </td>
+      <td
+        class="hint--right hint--no-animate"
+        data-hint="L-1.9hrs M-1.6hrs H-1.9hrs"
+      >
+        1.8 hrs average
+      </td>
+      <td class="hint--right hint--no-animate" data-hint="L-3.5 M-3.2 H-2.5">
+        3.1 average
+      </td>
+    </tr>
+    <tr style="font-weight: bold">
+      <td></td>
+      <td style="text-align: right">Totals:</td>
+      <td>106</td>
+      <td>191.6 hrs</td>
+      <td>1.8 hrs average</td>
+      <td>3.1 average</td>
+    </tr>
+    <tr>
+      <td style="border: none"></td>
+    </tr>
+    <tr style="background-color: #f0ffff">
+      <td>Service Desk T1</td>
+      <td>Hardware Issue</td>
+      <td class="hint--right hint--no-animate" data-hint="L-6 M-13 H-13">
+        32 (~35.2%)
+      </td>
+      <td
+        class="hint--right hint--no-animate"
+        data-hint="L-9.7hrs M-17.9hrs H-25.4hrs"
+      >
+        53.0 hrs (~33.0%)
+      </td>
+      <td
+        class="hint--right hint--no-animate"
+        data-hint="L-1.6hrs M-1.4hrs H-2.0hrs"
+      >
+        1.7 hrs average
+      </td>
+      <td class="hint--right hint--no-animate" data-hint="L-2.5 M-3.3 H-3.3">
+        3.2 average
+      </td>
+    </tr>
+    <tr style="background-color: #f0ffff">
+      <td></td>
+      <td>Network Issue</td>
+      <td class="hint--right hint--no-animate" data-hint="L-16 M-9 H-12">
+        37 (~40.7%)
+      </td>
+      <td
+        class="hint--right hint--no-animate"
+        data-hint="L-32.8hrs M-20.0hrs H-17.3hrs"
+      >
+        70.1 hrs (~43.7%)
+      </td>
+      <td
+        class="hint--right hint--no-animate"
+        data-hint="L-2.1hrs M-2.2hrs H-1.4hrs"
+      >
+        1.9 hrs average
+      </td>
+      <td class="hint--right hint--no-animate" data-hint="L-3.2 M-3.3 H-3.0">
+        3.2 average
+      </td>
+    </tr>
+    <tr style="background-color: #f0ffff">
+      <td></td>
+      <td>Software Issue</td>
+      <td class="hint--right hint--no-animate" data-hint="L-4 M-8 H-10">
+        22 (~24.2%)
+      </td>
+      <td
+        class="hint--right hint--no-animate"
+        data-hint="L-7.7hrs M-16.3hrs H-13.4hrs"
+      >
+        37.4 hrs (~23.3%)
+      </td>
+      <td
+        class="hint--right hint--no-animate"
+        data-hint="L-1.9hrs M-2.0hrs H-1.3hrs"
+      >
+        1.7 hrs average
+      </td>
+      <td class="hint--right hint--no-animate" data-hint="L-2.3 M-2.6 H-3.8">
+        3.1 average
+      </td>
+    </tr>
+    <tr style="font-weight: bold; background-color: #f0ffff">
+      <td></td>
+      <td style="text-align: right">Totals:</td>
+      <td>91</td>
+      <td>160.5 hrs</td>
+      <td>1.8 hrs average</td>
+      <td>3.1 average</td>
+    </tr>
+    <tr>
+      <td style="border: none"></td>
+    </tr>
+    <tr>
+      <td>Service Desk T2</td>
+      <td>Hardware Issue</td>
+      <td class="hint--right hint--no-animate" data-hint="L-10 M-9 H-13">
+        32 (~35.6%)
+      </td>
+      <td
+        class="hint--right hint--no-animate"
+        data-hint="L-23.3hrs M-23.3hrs H-21.8hrs"
+      >
+        68.4 hrs (~38.1%)
+      </td>
+      <td
+        class="hint--right hint--no-animate"
+        data-hint="L-2.3hrs M-2.6hrs H-1.7hrs"
+      >
+        2.1 hrs average
+      </td>
+      <td class="hint--right hint--no-animate" data-hint="L-3.3 M-2.9 H-3.1">
+        3.1 average
+      </td>
+    </tr>
+    <tr>
+      <td></td>
+      <td>Network Issue</td>
+      <td class="hint--right hint--no-animate" data-hint="L-10 M-7 H-8">
+        25 (~27.8%)
+      </td>
+      <td
+        class="hint--right hint--no-animate"
+        data-hint="L-17.6hrs M-12.4hrs H-14.7hrs"
+      >
+        44.7 hrs (~24.9%)
+      </td>
+      <td
+        class="hint--right hint--no-animate"
+        data-hint="L-1.8hrs M-1.8hrs H-1.8hrs"
+      >
+        1.8 hrs average
+      </td>
+      <td class="hint--right hint--no-animate" data-hint="L-2.3 M-2.9 H-3.6">
+        2.9 average
+      </td>
+    </tr>
+    <tr>
+      <td></td>
+      <td>Software Issue</td>
+      <td class="hint--right hint--no-animate" data-hint="L-14 M-8 H-11">
+        33 (~36.7%)
+      </td>
+      <td
+        class="hint--right hint--no-animate"
+        data-hint="L-24.0hrs M-23.7hrs H-18.9hrs"
+      >
+        66.6 hrs (~37.1%)
+      </td>
+      <td
+        class="hint--right hint--no-animate"
+        data-hint="L-1.7hrs M-3.0hrs H-1.7hrs"
+      >
+        2.0 hrs average
+      </td>
+      <td class="hint--right hint--no-animate" data-hint="L-2.9 M-2.6 H-3.1">
+        2.9 average
+      </td>
+    </tr>
+    <tr style="font-weight: bold">
+      <td></td>
+      <td style="text-align: right">Totals:</td>
+      <td>90</td>
+      <td>179.7 hrs</td>
+      <td>2.0 hrs average</td>
+      <td>3.0 average</td>
+    </tr>
+  </tbody>
+  <tfoot>
+    <tr>
+      <td colspan="6" style="text-align: right; border: none">
+        506 Tickets Excluded due to data errors
+      </td>
+    </tr>
+  </tfoot>
+</table>
