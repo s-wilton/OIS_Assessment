@@ -10,7 +10,7 @@ const { document } = window;
 
 //Importing named constants to improve code readability
 import { Priority, Metric, TeamSummary } from "./Interfaces";
-import { TeamSummaryObject } from "./TeamSummaryIngestion";
+import { TeamSummaryObject } from "./TeamSummaryObject";
 
 /**
  * Generates an HTML report based on the provided team summaries and ticket errors.
