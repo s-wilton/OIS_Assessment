@@ -4,8 +4,8 @@ export enum Priority {
   LOW = 0,
   MEDIUM,
   HIGH,
-  ALL, //Should be final value
-  NUM_LEVELS = ALL, //Final index coincides with count of levels
+  ALL, //Should be final index value
+  NUM_LEVELS = ALL, //Final index coincides with number of levels
 }
 export enum PriorityString {
   LOW = "low",

@@ -17,10 +17,10 @@ function dataParser(dataIn: object): object {
     to: "null@odhsoha.oregon.gov", //Placeholder for assessment
     from: "null@gmail.com", //Placeholder for assessment
     subject: "Assessment Task 1", //Placeholder for assessment
-    //Any additional field values
+    //Placeholder for any additional field values
     body: {
       html: generateHTMLReport(teamSummaryMap, ticketErrsArr),
-      text: "Placeholder for text", //Text representation of report data
+      text: "Placeholder for text", //Text representation of report data, ideally, the generateReport function returns both the HTML and the text versions
     },
     attachments: [],
   };
@@ -28,4 +28,5 @@ function dataParser(dataIn: object): object {
   return emailMessage;
 }
 
-console.log(dataParser(data));
+// dataParser(data);
+// console.log(dataParser(data));
