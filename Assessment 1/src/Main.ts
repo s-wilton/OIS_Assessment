@@ -1,6 +1,6 @@
 import data from "./TypeScript_Source_Data.json";
 import { generateTeamSummaries } from "./TeamSummaryIngestion";
-import { generateHTMLReport } from "./EmailTemplate_v2";
+import { generateHTMLReport } from "./EmailTemplate";
 
 /**
  * Parses the source source data and returns an js email object
@@ -14,12 +14,13 @@ function dataParser(dataIn: object): object {
 
   //Build the email object, calling the html generator for the main body
   const emailMessage = {
-    to: "JORDAN.R.REICH@odhsoha.oregon.gov", //Placeholder for assessment
-    from: "thewiltonator@gmail.com", //Placeholder for assessment
+    to: "null@odhsoha.oregon.gov", //Placeholder for assessment
+    from: "null@gmail.com", //Placeholder for assessment
     subject: "Assessment Task 1", //Placeholder for assessment
     //Any additional field values
     body: {
       html: generateHTMLReport(teamSummaryMap, ticketErrsArr),
+      text: "Placeholder for text", //Text representation of report data
     },
     attachments: [],
   };
@@ -27,5 +28,4 @@ function dataParser(dataIn: object): object {
   return emailMessage;
 }
 
-// dataParser(data);
 console.log(dataParser(data));

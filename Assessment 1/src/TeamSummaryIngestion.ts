@@ -1,49 +1,16 @@
 //Importing named constants to improve code readability and easily reference indexes
 import {
-  NUMBER_OF_PRIORITY_TYPES,
-  LOW_PRIORITY,
-  MEDIUM_PRIORITY,
-  HIGH_PRIORITY,
-  NUMBER_OF_TICKET_METRICS,
-  COUNT,
-  TIME,
-  SCORE,
-} from "./Constants";
-
-//Importing named constants to improve code readability and easily reference error codes
-import {
-  TICKET_OKAY,
-  TICKET_ERR_PRIORITY,
-  TICKET_ERR_DATE,
-  TICKET_ERR_RATING,
-  TICKET_ERR_TIME,
-} from "./Constants";
+  Priority,
+  Metric,
+  TicketStatus,
+  TicketStatusString,
+  Ticket,
+  TeamSummary,
+} from "./Interfaces";
 
 //Global object for storing ticket errors
 //Array of tuples in the form: [Ticket ID, Ticket Error Code, Error Text]
 var ticketErrs: [number, number, string][] = [];
-
-//Interface matching the structure of the incoming json data
-interface Ticket {
-  ticket_id: string;
-  ticket_created_at: string;
-  ticket_resolved_at: string;
-  time_to_resolve: string;
-  assigned_team: string;
-  ticket_category: string;
-  ticket_priority: string;
-  resolution_notes: string;
-  customer_satisfaction_rating: string;
-}
-
-//Interface of the TeamSummary, the return from generating reports
-export interface TeamSummary {
-  teamName: string;
-  ticketsByCategoryMap: Map<string, number[][]>;
-  totalTeamTickets: number;
-  totalTeamTime: number;
-  totalTeamScore: number;
-}
 
 /**
  * The Team Summary Object, holding the name of the team and performance metrics.
@@ -75,21 +42,21 @@ export class TeamSummaryObject {
    */
   public updateValues(newTicket: Ticket): number {
     //Return immediately if ticket is not valid
-    if (validateTicket(newTicket) != TICKET_OKAY) return 1;
+    if (validateTicket(newTicket) != TicketStatus.OKAY) return 1;
 
     //If this ticket belongs to a new work category
     //Create new ticket matrix, initialize with 0s, and add it to the category map with a key matching the category
     if (!this.ticketsByCategoryMap.has(newTicket.ticket_category)) {
       this.ticketsByCategoryMap.set(
         newTicket.ticket_category,
-        Array(NUMBER_OF_PRIORITY_TYPES)
+        Array(Priority.NUM_LEVELS)
           .fill(0)
-          .map(() => Array(NUMBER_OF_TICKET_METRICS).fill(0))
+          .map(() => Array(Metric.NUM_METRICS).fill(0))
       );
     }
 
     //Create variables for regularly used values in the following code
-    var priorityCode: number,
+    var curPriorityCode: number,
       newTicketTime: number = parseInt(newTicket.time_to_resolve),
       newTicketScore: number = parseInt(newTicket.customer_satisfaction_rating),
       //Get current category values for manipulating
@@ -101,26 +68,26 @@ export class TeamSummaryObject {
     //Ticket is validated to have one of these three values at this point
     switch (newTicket.ticket_priority.toLowerCase()) {
       case "low":
-        priorityCode = LOW_PRIORITY;
+        curPriorityCode = Priority.LOW;
         break;
       case "medium":
-        priorityCode = MEDIUM_PRIORITY;
+        curPriorityCode = Priority.MEDIUM;
         break;
       case "high":
-        priorityCode = HIGH_PRIORITY;
+        curPriorityCode = Priority.HIGH;
         break;
     }
 
     //Increment the ticket count for the category and overall team totals
-    existingCategoryValues[priorityCode][COUNT] += 1;
+    existingCategoryValues[curPriorityCode][Metric.COUNT] += 1;
     this.totalTickets += 1;
 
     //Add the ticket resolution time for the category and overall team totals
-    existingCategoryValues[priorityCode][TIME] += newTicketTime;
+    existingCategoryValues[curPriorityCode][Metric.TIME] += newTicketTime;
     this.totalTime += newTicketTime;
 
     //Add the ticket score for the category and overall team totals
-    existingCategoryValues[priorityCode][SCORE] += newTicketScore;
+    existingCategoryValues[curPriorityCode][Metric.SCORE] += newTicketScore;
     this.totalScore += newTicketScore;
 
     //Insert the transformed values back into the map by category
@@ -154,18 +121,17 @@ export class TeamSummaryObject {
  * @returns {number} A status code representing the ticket's validity, or an error code representing the reason for being invalid.
  */
 function validateTicket(checkTicket: Ticket): number {
-  var retCode: number = TICKET_OKAY,
-    ticketId: number = parseInt(checkTicket.ticket_id);
+  var retCode: number = TicketStatus.OKAY,
+    ticketId: number = parseInt(checkTicket.ticket_id),
+    ticketValid: boolean = true;
 
   //Checks that the priority "low," "medium," or "high"
-  if (!/^(low|medium|high)$/.test(checkTicket.ticket_priority.toLowerCase())) {
-    retCode = TICKET_ERR_PRIORITY;
-    ticketErrs.push([
-      ticketId,
-      retCode,
-      `Err ${retCode} - Priority Level Error`,
-    ]);
-    return retCode;
+  if (
+    ticketValid &&
+    !/^(low|medium|high)$/.test(checkTicket.ticket_priority.toLowerCase())
+  ) {
+    retCode = TicketStatus.ERR_PRIORITY;
+    ticketValid = false;
   }
 
   //Checks that the creation date is not in the future and does not appear after resolution date
@@ -176,41 +142,38 @@ function validateTicket(checkTicket: Ticket): number {
       new Date(checkTicket.ticket_created_at)
     );
   if (
-    ticketCreationDate > new Date() ||
-    ticketCreationDate > ticketResolutionDate
+    ticketValid &&
+    (ticketCreationDate > new Date() ||
+      ticketCreationDate > ticketResolutionDate)
   ) {
-    retCode = TICKET_ERR_DATE;
-    ticketErrs.push([ticketId, retCode, `Err ${retCode} - Date Error`]);
-    return retCode;
+    retCode = TicketStatus.ERR_DATE;
+    ticketValid = false;
   }
 
   //Check that the customer satisfaction rating is a number in the 1..5 range
   var customerRating: number = parseInt(
     checkTicket.customer_satisfaction_rating
   );
-  if (1 > customerRating || customerRating > 5) {
-    retCode = TICKET_ERR_RATING;
-    ticketErrs.push([
-      ticketId,
-      retCode,
-      `Err ${retCode} - Customer Score Error`,
-    ]);
-    return retCode;
+  if (ticketValid && (1 > customerRating || customerRating > 5)) {
+    retCode = TicketStatus.ERR_RATING;
+    ticketValid = false;
   }
 
   //Check that the time to resolve is not negative
   var ticketTime: number = parseInt(checkTicket.time_to_resolve);
-  if (ticketTime <= 0) {
-    retCode = TICKET_ERR_TIME;
+  if (ticketValid && ticketTime <= 0) {
+    retCode = TicketStatus.ERR_TIME;
+    ticketValid = false;
+  }
+
+  if (retCode != TicketStatus.OKAY) {
     ticketErrs.push([
       ticketId,
       retCode,
-      `Err ${retCode} - Resolution Time Error`,
+      `Err ${retCode} - ${TicketStatusString[retCode]}`,
     ]);
-    return retCode;
   }
 
-  //Reaching this means the ticket is likely valid
   return retCode;
 }
 /**

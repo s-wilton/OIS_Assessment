@@ -1,16 +1,6 @@
 //Importing named constants to improve code readability
-import {
-  LOW_PRIORITY,
-  MEDIUM_PRIORITY,
-  HIGH_PRIORITY,
-  ALL_PRIORITY,
-  COUNT,
-  TIME,
-  SCORE,
-  NUMBER_OF_TICKET_METRICS,
-} from "./Constants";
-
-import { TeamSummaryObject, TeamSummary } from "./TeamSummaryIngestion";
+import { Priority, Metric, TeamSummary } from "./Interfaces";
+import { TeamSummaryObject } from "./TeamSummaryIngestion";
 
 /**
  * Generates an HTML report based on the provided team summaries and ticket errors.
@@ -105,28 +95,28 @@ export function generateHTMLReport(
 
       //Push an additional layer on to the tricket matrix representing this category
       //This will hold totals per metric across priorities
-      categoryTickets.push(Array(NUMBER_OF_TICKET_METRICS).fill(0));
+      categoryTickets.push(Array(Metric.NUM_METRICS).fill(0));
 
       //Loop through tickets in category
       ticketLoop: for (
-        var metric = 0;
-        metric < categoryTickets.length;
-        metric++
+        var curMetric = 0;
+        curMetric < categoryTickets.length;
+        curMetric++
       ) {
         //Quick-use variables
-        categoryMetricLowP = categoryTickets[LOW_PRIORITY][metric];
-        categoryMetricMedP = categoryTickets[MEDIUM_PRIORITY][metric];
-        categoryMetricHighP = categoryTickets[HIGH_PRIORITY][metric];
+        categoryMetricLowP = categoryTickets[Priority.LOW][curMetric];
+        categoryMetricMedP = categoryTickets[Priority.MEDIUM][curMetric];
+        categoryMetricHighP = categoryTickets[Priority.HIGH][curMetric];
         categoryMetricTotal =
           categoryMetricLowP + categoryMetricMedP + categoryMetricHighP;
 
         //Assign category totals to newly-added matrix dimension
-        categoryTickets[ALL_PRIORITY][metric] = categoryMetricTotal;
+        categoryTickets[Priority.ALL][curMetric] = categoryMetricTotal;
 
         //For each metric, in the current case, Tickets Completed, Ticket Time, and Ticket Score
-        switch (metric) {
+        switch (curMetric) {
           //Tickets Completed
-          case COUNT:
+          case Metric.COUNT:
             //Append a cell with the tickets completed metric, with a percentage representing how much of the team total it is
             //Also add a data-hint attribute with the number of Low, Medium, and High priorities values for the this metric
             //(data-hint is for use with hint.css to improve data granularity beyond at-a-glance)
@@ -141,7 +131,7 @@ export function generateHTMLReport(
             break;
 
           //Total and Average Times
-          case TIME:
+          case Metric.TIME:
             //Append a cell with the total ticket time for this category, converted to hours (rounded ###.#), with a percentage representing how much of the team total it is
             //Also add a data-hint attribute with the number of Low, Medium, and High priorities values for the this metric
             //(data-hint is for use with hint.css to improve data granularity beyond at-a-glance)
@@ -164,20 +154,20 @@ export function generateHTMLReport(
             reportHTML += `
               <td class="hint--right hint--no-animate" data-hint="L-${(
                 categoryMetricLowP /
-                categoryTickets[LOW_PRIORITY][COUNT] /
+                categoryTickets[Priority.LOW][Metric.COUNT] /
                 360
               ).toFixed(1)}hrs M-${(
               categoryMetricMedP /
-              categoryTickets[MEDIUM_PRIORITY][COUNT] /
+              categoryTickets[Priority.MEDIUM][Metric.COUNT] /
               360
             ).toFixed(1)}hrs H-${(
               categoryMetricHighP /
-              categoryTickets[HIGH_PRIORITY][COUNT] /
+              categoryTickets[Priority.HIGH][Metric.COUNT] /
               360
             ).toFixed(1)}hrs">
                 ${(
                   categoryMetricTotal /
-                  categoryTickets[ALL_PRIORITY][COUNT] /
+                  categoryTickets[Priority.ALL][Metric.COUNT] /
                   360
                 ).toFixed(1)} hrs average
               </td>
@@ -185,20 +175,22 @@ export function generateHTMLReport(
             break;
 
           //Customer Satisfaction Ratings
-          case SCORE:
+          case Metric.SCORE:
             //Append a cell with the average customer rating
             //Also add a data-hint attribute with the number of Low, Medium, and High priorities values for the this metric
             //(data-hint is for use with hint.css to improve data granularity beyond at-a-glance)
             reportHTML += `
               <td class="hint--right hint--no-animate" data-hint="L-${(
-                categoryMetricLowP / categoryTickets[LOW_PRIORITY][COUNT]
+                categoryMetricLowP / categoryTickets[Priority.LOW][Metric.COUNT]
               ).toFixed(1)} M-${(
-              categoryMetricMedP / categoryTickets[MEDIUM_PRIORITY][COUNT]
+              categoryMetricMedP /
+              categoryTickets[Priority.MEDIUM][Metric.COUNT]
             ).toFixed(1)} H-${(
-              categoryMetricHighP / categoryTickets[HIGH_PRIORITY][COUNT]
+              categoryMetricHighP / categoryTickets[Priority.HIGH][Metric.COUNT]
             ).toFixed(1)}">
                 ${(
-                  categoryMetricTotal / categoryTickets[ALL_PRIORITY][COUNT]
+                  categoryMetricTotal /
+                  categoryTickets[Priority.ALL][Metric.COUNT]
                 ).toFixed(1)} average
               </td>
             `;
