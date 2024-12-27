@@ -7,6 +7,11 @@ export enum Priority {
   ALL, //Should be final value
   NUM_LEVELS = ALL, //Final index coincides with count of levels
 }
+export enum PriorityString {
+  LOW = "low",
+  MEDIUM = "medium",
+  HIGH = "high",
+}
 
 //Number of metric types, used to generate correct array size (columns)
 export enum Metric {

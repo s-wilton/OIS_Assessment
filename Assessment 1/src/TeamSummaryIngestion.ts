@@ -1,6 +1,7 @@
 //Importing named constants to improve code readability and easily reference indexes
 import {
   Priority,
+  PriorityString,
   Metric,
   TicketStatus,
   TicketStatusString,
@@ -64,19 +65,10 @@ export class TeamSummaryObject {
         newTicket.ticket_category
       );
 
-    //Convert the ticket_priority to a named constant
-    //Ticket is validated to have one of these three values at this point
-    switch (newTicket.ticket_priority.toLowerCase()) {
-      case "low":
-        curPriorityCode = Priority.LOW;
-        break;
-      case "medium":
-        curPriorityCode = Priority.MEDIUM;
-        break;
-      case "high":
-        curPriorityCode = Priority.HIGH;
-        break;
-    }
+    //Retrieve index cooresponding to priority level
+    curPriorityCode = Object.values(PriorityString).indexOf(
+      newTicket.ticket_priority.toLowerCase() as PriorityString
+    );
 
     //Increment the ticket count for the category and overall team totals
     existingCategoryValues[curPriorityCode][Metric.COUNT] += 1;
@@ -122,13 +114,14 @@ export class TeamSummaryObject {
  */
 function validateTicket(checkTicket: Ticket): number {
   var retCode: number = TicketStatus.OKAY,
-    ticketId: number = parseInt(checkTicket.ticket_id),
     ticketValid: boolean = true;
 
   //Checks that the priority "low," "medium," or "high"
   if (
     ticketValid &&
-    !/^(low|medium|high)$/.test(checkTicket.ticket_priority.toLowerCase())
+    !Object.values(PriorityString).includes(
+      checkTicket.ticket_priority.toLowerCase() as PriorityString
+    )
   ) {
     retCode = TicketStatus.ERR_PRIORITY;
     ticketValid = false;
@@ -168,7 +161,7 @@ function validateTicket(checkTicket: Ticket): number {
 
   if (retCode != TicketStatus.OKAY) {
     ticketErrs.push([
-      ticketId,
+      parseInt(checkTicket.ticket_id),
       retCode,
       `Err ${retCode} - ${TicketStatusString[retCode]}`,
     ]);
