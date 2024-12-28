@@ -1,5 +1,3 @@
-//TeamSummary organization constants
-//Number of priority types, used to generate correct array size (rows)
 export enum Priority {
   LOW = 0,
   MEDIUM,
@@ -13,7 +11,6 @@ export enum PriorityString {
   HIGH = "high",
 }
 
-//Number of metric types, used to generate correct array size (columns)
 export enum Metric {
   COUNT = 0,
   TIME_SECONDS,
@@ -21,7 +18,6 @@ export enum Metric {
   NUM_METRICS, //Number of metrics to consider is equal to the final enum index, used in matrix generation
 }
 
-//Validation Codes for Tickets
 export enum TicketStatus {
   OKAY = 0,
   ERR_PRIORITY,
@@ -37,7 +33,6 @@ export enum TicketStatusString {
   ERR_TIME = "Resolution Time Error",
 }
 
-//Interface matching the structure of the incoming json data
 export interface Ticket {
   ticket_id: string;
   ticket_created_at: string;
@@ -50,7 +45,6 @@ export interface Ticket {
   customer_satisfaction_rating: string;
 }
 
-//Interface of the TeamSummary, the return from generating reports
 export interface TeamSummary {
   teamName: string;
   ticketsByCategoryMap: Map<string, number[][]>;
