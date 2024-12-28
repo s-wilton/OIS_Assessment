@@ -6,11 +6,18 @@
 
 $output = "Assessment2CSV.csv"
 
-$curStaffURL = "https://api.oregonlegislature.gov/odata/odataservice.svc/CommitteeStaffMembers"
-$legSessionURL = "https://api.oregonlegislature.gov/odata/odataservice.svc/LegislativeSessions"
+$namespace = @{
+    d = "http://schemas.microsoft.com/ado/2007/08/dataservices"
+    m = "http://schemas.microsoft.com/ado/2007/08/dataservices/metadata"
+}
+
+$curStaffURL = "https://api.oregonlegislature.gov/odata/odataservice.svc/CommitteeStaffMembers?`$select=FirstName,LastName,SessionKey"
+$legSessionURL = "https://api.oregonlegislature.gov/odata/odataservice.svc/LegislativeSessions?`$select=SessionKey,SessionName,BeginDate,EndDate"
 
 $curStaffXML = $null
 $legSessionXML = $null
+
+Write-Output $curStaffURL
 
 try {
   $curStaffRes = Invoke-WebRequest -Uri $curStaffURL -Method Get
@@ -28,16 +35,12 @@ try {
   exit 1
 }
 
-$namespace = @{
-    d = "http://schemas.microsoft.com/ado/2007/08/dataservices"
-    m = "http://schemas.microsoft.com/ado/2007/08/dataservices/metadata"
-}
-
 $xmlNamespaceManager = New-Object System.Xml.XmlNamespaceManager($curStaffXML.NameTable)
 
 foreach ($prefix in $namespace.Keys) {
     $xmlNamespaceManager.AddNamespace($prefix, $namespace[$prefix])
 }
+
 
 $staffSessionMergedXML = foreach ($staffEntry in $curStaffXML.SelectNodes("//m:properties", $xmlNamespaceManager)) {
   $matchedSessionEntry = $legSessionXML.SelectNodes("//m:properties", $xmlNamespaceManager) | Where-Object { $_.SessionKey -eq $staffEntry.SessionKey }
