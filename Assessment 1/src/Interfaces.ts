@@ -4,8 +4,8 @@ export enum Priority {
   LOW = 0,
   MEDIUM,
   HIGH,
-  ALL, //Should be final index value
-  NUM_LEVELS = ALL, //Final index coincides with number of levels
+  ALL, //Should be second-to-last enum value, used for holding summations by-category during report generation
+  NUM_LEVELS = ALL, //Number of priority levels coincides with the index value of ALL, used in matrix generation
 }
 export enum PriorityString {
   LOW = "low",
@@ -16,9 +16,9 @@ export enum PriorityString {
 //Number of metric types, used to generate correct array size (columns)
 export enum Metric {
   COUNT = 0,
-  TIME,
+  TIME_SECONDS,
   SCORE,
-  NUM_METRICS,
+  NUM_METRICS, //Number of metrics to consider is equal to the final enum index, used in matrix generation
 }
 
 //Validation Codes for Tickets
@@ -55,6 +55,6 @@ export interface TeamSummary {
   teamName: string;
   ticketsByCategoryMap: Map<string, number[][]>;
   totalTeamTickets: number;
-  totalTeamTime: number;
+  totalTeamTimeSeconds: number;
   totalTeamScore: number;
 }

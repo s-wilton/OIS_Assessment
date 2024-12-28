@@ -1,4 +1,3 @@
-//Importing named constants to improve code readability
 import { Priority, Metric, TeamSummary } from "./Interfaces";
 import { TeamSummaryObject } from "./TeamSummaryObject";
 
@@ -16,7 +15,6 @@ export function generateHTMLReport(
   summaryMap: Map<string, TeamSummaryObject>,
   ticketErrs: [number, number, string][]
 ): string {
-  //Start building the HTML, serialized as a String, stopping after the opening tbody tag
   var reportHTML = `
     <table>
       <style>
@@ -54,8 +52,8 @@ export function generateHTMLReport(
       </thead>
       <tbody>`;
 
-  //Various worker variables for the loops
-  var curTeam: TeamSummary;
+  //Loop Variables
+  var curTeamSummary: TeamSummary;
   var colorDiff: boolean = true,
     firstLoop: boolean = true,
     nameWritten: boolean;
@@ -64,77 +62,65 @@ export function generateHTMLReport(
     categoryMetricMedP: number,
     categoryMetricHighP: number;
 
-  //Loop through the teams in the summary, sorted alphabetically
   teamLoop: for (var [teamName, teamSummary] of [
     ...summaryMap.entries(),
   ].sort()) {
-    colorDiff = !colorDiff; //Flip between to table colors with each team to improve report readability
-    nameWritten = false; //Check if the team name has already been written
-    curTeam = teamSummary.getSummary();
+    colorDiff = !colorDiff;
+    nameWritten = false;
+    curTeamSummary = teamSummary.getSummary();
 
-    //If this is not the first team to be looped through, add an additional row to visually-separate this from the preview team
+    //Adds an additional row to visually separate summaries after the first team summary
     if (firstLoop) {
       firstLoop = false;
     } else {
       reportHTML += '<tr><td style="border: none"></td></tr>';
     }
 
-    //Loop through the map representing categories that this team dealt with
     categoryLoop: for (var [categoryName, categoryTickets] of [
-      ...curTeam.ticketsByCategoryMap.entries(),
+      ...curTeamSummary.ticketsByCategoryMap.entries(),
     ].sort()) {
-      //Create a row for the category and color it appropriately. Print the team name IFF it hasn't been printed in the previous row. Print the category.
       reportHTML += `
         <tr ${colorDiff ? "style='background-color: #F0FFFF;'" : ""}>
-          <td>${!nameWritten ? curTeam.teamName : ""}</td>
+          <td>${!nameWritten ? curTeamSummary.teamName : ""}</td>
           <td>${categoryName}</td>
       `;
 
-      //Name is definitely written by this point
       nameWritten = true;
 
-      //Push an additional layer on to the tricket matrix representing this category
-      //This will hold totals per metric across priorities
+      //Push an additional layer on to the ticket matrix that represents this category
+      //This will hold totals by-metric across priorities (e.g. total time spent in this category)
       categoryTickets.push(Array(Metric.NUM_METRICS).fill(0));
 
-      //Loop through tickets in category
       ticketLoop: for (
         var curMetric = 0;
         curMetric < categoryTickets.length;
         curMetric++
       ) {
-        //Quick-use variables
         categoryMetricLowP = categoryTickets[Priority.LOW][curMetric];
         categoryMetricMedP = categoryTickets[Priority.MEDIUM][curMetric];
         categoryMetricHighP = categoryTickets[Priority.HIGH][curMetric];
         categoryMetricTotal =
           categoryMetricLowP + categoryMetricMedP + categoryMetricHighP;
 
-        //Assign category totals to newly-added matrix dimension
         categoryTickets[Priority.ALL][curMetric] = categoryMetricTotal;
 
-        //For each metric, in the current case, Tickets Completed, Ticket Time, and Ticket Score
+        //NOTE: data-hint is for use with hint.css to improve data granularity beyond at-a-glance (hovering shows more info)
         switch (curMetric) {
-          //Tickets Completed
+          //One cell - Total tickets for this category
           case Metric.COUNT:
-            //Append a cell with the tickets completed metric, with a percentage representing how much of the team total it is
-            //Also add a data-hint attribute with the number of Low, Medium, and High priorities values for the this metric
-            //(data-hint is for use with hint.css to improve data granularity beyond at-a-glance)
             reportHTML += `
               <td class="hint--right hint--no-animate" data-hint="L-${categoryMetricLowP} M-${categoryMetricMedP} H-${categoryMetricHighP}">
                 ${categoryMetricTotal} (~${(
-              (categoryMetricTotal / curTeam.totalTeamTickets) *
+              (categoryMetricTotal / curTeamSummary.totalTeamTickets) *
               100
             ).toFixed(1)}%)
               </td>
             `;
             break;
 
-          //Total and Average Times
-          case Metric.TIME:
-            //Append a cell with the total ticket time for this category, converted to hours (rounded ###.#), with a percentage representing how much of the team total it is
-            //Also add a data-hint attribute with the number of Low, Medium, and High priorities values for the this metric
-            //(data-hint is for use with hint.css to improve data granularity beyond at-a-glance)
+          //Two cells - Total time in this category, and average time per ticket in this category
+          case Metric.TIME_SECONDS:
+            //Total Time
             reportHTML += `
               <td class="hint--right hint--no-animate" data-hint="L-${(
                 categoryMetricLowP / 360
@@ -142,15 +128,13 @@ export function generateHTMLReport(
               1
             )}hrs H-${(categoryMetricHighP / 360).toFixed(1)}hrs">
                 ${(categoryMetricTotal / 360).toFixed(1)} hrs (~${(
-              (categoryMetricTotal / curTeam.totalTeamTime) *
+              (categoryMetricTotal / curTeamSummary.totalTeamTimeSeconds) *
               100
             ).toFixed(1)}%)
               </td>
             `;
 
-            //Append a cell with the average time per for this category, converted to hours (rounded #.#)
-            //Also add a data-hint attribute with the number of Low, Medium, and High priorities values for the this metric
-            //(data-hint is for use with hint.css to improve data granularity beyond at-a-glance)
+            //Average Time
             reportHTML += `
               <td class="hint--right hint--no-animate" data-hint="L-${(
                 categoryMetricLowP /
@@ -174,11 +158,8 @@ export function generateHTMLReport(
             `;
             break;
 
-          //Customer Satisfaction Ratings
+          //One cell - Average customer rating in this category
           case Metric.SCORE:
-            //Append a cell with the average customer rating
-            //Also add a data-hint attribute with the number of Low, Medium, and High priorities values for the this metric
-            //(data-hint is for use with hint.css to improve data granularity beyond at-a-glance)
             reportHTML += `
               <td class="hint--right hint--no-animate" data-hint="L-${(
                 categoryMetricLowP / categoryTickets[Priority.LOW][Metric.COUNT]
@@ -197,7 +178,6 @@ export function generateHTMLReport(
             break;
         }
       }
-      //End the row for the category
       reportHTML += `</tr>`;
     }
 
@@ -208,20 +188,21 @@ export function generateHTMLReport(
       }">
         <td></td>
         <td style="text-align: right">Totals:</td>
-        <td>${curTeam.totalTeamTickets}</td> 
-        <td>${(curTeam.totalTeamTime / 360).toFixed(1)} hrs</td>
-        <td>${(curTeam.totalTeamTime / curTeam.totalTeamTickets / 360).toFixed(
-          1
-        )} hrs average</td>
-        <td>${(curTeam.totalTeamScore / curTeam.totalTeamTickets).toFixed(
-          1
-        )} average</td>
+        <td>${curTeamSummary.totalTeamTickets}</td> 
+        <td>${(curTeamSummary.totalTeamTimeSeconds / 360).toFixed(1)} hrs</td>
+        <td>${(
+          curTeamSummary.totalTeamTimeSeconds /
+          curTeamSummary.totalTeamTickets /
+          360
+        ).toFixed(1)} hrs average</td>
+        <td>${(
+          curTeamSummary.totalTeamScore / curTeamSummary.totalTeamTickets
+        ).toFixed(1)} average</td>
       </tr>
     `;
   }
 
-  //Close the table body and append a footer noting the number of tickets excluded for errors
-  //Close table
+  //Append footer with ticket error count
   reportHTML += `</tbody>
     <tfoot>
       <tr>
@@ -232,7 +213,7 @@ export function generateHTMLReport(
     </tfoot>
   </table>`;
 
-  //Return the HTML, serialized as a String, stripping out unnecessary whitespace and truncating spaces
+  //Return the String-HTML, stripping out unnecessary whitespace and truncating spaces
   return reportHTML.trim().replace(/([\n\r\t]+|\s{2,})/gm, (match) => {
     return match.match(/([\n\r\t]+)/gm) ? "" : " ";
   });

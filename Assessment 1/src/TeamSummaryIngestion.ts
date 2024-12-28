@@ -1,10 +1,8 @@
-//Importing named constants to improve code readability and easily reference indexes
 import { TicketStatus, TicketStatusString, Ticket } from "./Interfaces";
 import { validateTicket } from "./ValidateTicket";
 import { TeamSummaryObject } from "./TeamSummaryObject";
 
 /**
- * Generates team summaries based on the json ticket data.
  * This function processes the input json ticket data and returns a summary of team performance summaries and ticket errors.
  * @param {object} data - The input json ticket data used to generate the team summaries.
  * @returns {object} An object containing:
@@ -25,12 +23,13 @@ export function generateTeamSummaries(data: object): {
   var ticketTeam: string;
   var ticketValidationCode: number;
 
-  //Iterate through the provided json ticket data
   for (var i in data) {
     ticket = data[i];
     ticketTeam = ticket.assigned_team;
 
-    //Validate before passing
+    //Ticket Validation checks for errors in the priority level, data misalignments,
+    //invalid customer ratings, and negative resolution times. Saving foul ticket entries
+    //to an array to reported later
     if ((ticketValidationCode = validateTicket(ticket)) != TicketStatus.OKAY) {
       ticketErrs.push([
         parseInt(ticket.ticket_id),
@@ -40,8 +39,8 @@ export function generateTeamSummaries(data: object): {
       continue;
     }
 
-    //If the team already exists in the summary map, update their summary
-    //otherwise, create a new team summary and insert it into the map.
+    //If the team already exists in the team map, update their summary
+    //otherwise, create a new team and insert their summary it into the map.
     if (summaryMap.has(ticketTeam)) {
       summaryMap.get(ticketTeam).updateValues(ticket);
     } else {
