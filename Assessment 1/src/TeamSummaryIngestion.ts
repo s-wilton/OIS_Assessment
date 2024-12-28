@@ -27,7 +27,7 @@ export function generateTeamSummaries(data: object): {
     ticket = data[i];
     ticketTeam = ticket.assigned_team;
 
-    //Ticket Validation checks for errors in the priority level, data misalignments,
+    //Ticket Validation checks for errors in the priority level, date misalignments,
     //invalid customer ratings, and negative resolution times. Saving foul ticket entries
     //to an array to reported later
     if ((ticketValidationCode = validateTicket(ticket)) != TicketStatus.OKAY) {

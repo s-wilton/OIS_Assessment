@@ -45,7 +45,7 @@ foreach ($prefix in $namespace.Keys) {
 $staffSessionMergedXML = foreach ($staffEntry in $curStaffXML.SelectNodes("//m:properties", $xmlNamespaceManager)) {
   $matchedSessionEntry = $legSessionXML.SelectNodes("//m:properties", $xmlNamespaceManager) | Where-Object { $_.SessionKey -eq $staffEntry.SessionKey }
 
-  if($matchedSessionEntry) {    
+  if($matchedSessionEntry) {
     $mergedEntry = [PSCustomObject]@{
       Name = $staffEntry.FirstName + " " + $staffEntry.LastName
       SessionName = $matchedSessionEntry.SessionName
